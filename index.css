@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card_small {
+  @apply w-full h-1/2 p-4 rounded-xl;
+}
+.card_big {
+  @apply w-1/2 h-full rounded-xl ;
+}
