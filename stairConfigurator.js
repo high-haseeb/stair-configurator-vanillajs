@@ -174,10 +174,51 @@ export class TopView {
 
     this.ctx.strokeStyle = "black";
     this.ctx.fillStyle = "white";
+
     for (let i = 0; i < numSteps; i++) {
       const stepY = centerY + i * scaledStepDepth - (numSteps * scaledStepDepth) / 2 - scaledNosing;
       this.ctx.fillRect(centerX - scaledStepWidth / 2, stepY, scaledStepWidth, scaledStepDepth + scaledNosing);
       this.ctx.strokeRect(centerX - scaledStepWidth / 2, stepY, scaledStepWidth, scaledStepDepth + scaledNosing);
+    }
+
+    const createMark = (x, y, length, size, hor = false, offset, text) => {
+      this.ctx.strokeStyle = "red";
+      this.ctx.fillStyle = "red";
+      this.ctx.beginPath();
+      this.ctx.font = "10px sans";
+      this.ctx.lineWidth = 2;
+      this.ctx.textAlign = "left";
+      if (hor) {
+        y += offset;
+        this.ctx.moveTo(x, y + size);
+        this.ctx.lineTo(x, y - size);
+
+        this.ctx.moveTo(x, y);
+        this.ctx.lineTo(x + length, y);
+
+        this.ctx.moveTo(x + length, y + size);
+        this.ctx.lineTo(x + length, y - size);
+        this.ctx.fillText(text, x, y + 15);
+      } else {
+        x += offset;
+        this.ctx.moveTo(x + size, y);
+        this.ctx.lineTo(x - size, y);
+
+        this.ctx.moveTo(x, y);
+        this.ctx.lineTo(x, y + length);
+
+        this.ctx.moveTo(x + size, y + length);
+        this.ctx.lineTo(x - size, y + length);
+
+        this.ctx.fillText(text, x + 15, y);
+      }
+
+      this.ctx.stroke();
+    };
+    if (this.props.showProps) {
+      const stepY = centerY + 0 * scaledStepDepth - (numSteps * scaledStepDepth) / 2 - scaledNosing;
+      createMark(centerX + scaledStepWidth / 2, stepY, scaledStepDepth, 10, false, 15 , `Individual Going${this.props.stepDepth * 100}mm` ) 
+      createMark(centerX - scaledStepWidth / 2, stepY, scaledStepWidth, 10, true, -15 , `Step Width${this.props.stepWidth * 100}mm` ) 
     }
   }
 }
@@ -191,7 +232,7 @@ export class ThreeView {
     this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.camera.position.z = 5;
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    // this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearColor(0x000000, 0);
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     this.container.appendChild(this.renderer.domElement);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -209,11 +250,11 @@ export class ThreeView {
 
   addShadowPlane() {
     const groundGeometry = new THREE.PlaneGeometry(100, 100);
-    const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.2 }); // Adjust opacity as needed
+    const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.2 });
     const groundPlane = new THREE.Mesh(groundGeometry, groundMaterial);
     groundPlane.position.y = -this.totalHeight / 2;
-    groundPlane.rotation.x = -Math.PI / 2; // Rotate to lay flat
-    groundPlane.receiveShadow = true; // Enable shadow receiving
+    groundPlane.rotation.x = -Math.PI / 2;
+    groundPlane.receiveShadow = true;
     this.scene.add(groundPlane);
   }
 
@@ -239,7 +280,7 @@ export class ThreeView {
       riser.castShadow = true;
       riser.position.set(0, i * stepHeight + i * treadThickness, i * -stepDepth - treadThickness / 2 + riserThickness / 2);
       const tread = new THREE.Mesh(treadGeometry, treadMaterial);
-      tread.castShadow = true
+      tread.castShadow = true;
       tread.position.set(0, i * stepHeight + stepHeight / 2 + i * treadThickness + treadThickness / 2, i * stepDepth * -1 - stepDepth / 2 + nosing / 2);
       this.stairs.add(riser, tread);
     }
@@ -263,10 +304,10 @@ export class ThreeView {
   }
 
   createLights() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Soft white light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     this.scene.add(ambientLight);
 
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 4); 
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 4);
     this.directionalLight.position.set(1, 4, 3);
     if (this.props.enableShadows) {
       this.directionalLight.castShadow = true;
