@@ -12,8 +12,8 @@ const props = {
   treadThickness: 0.25,
   nosing: 0.2,
   showProps: true,
-  riserMaterialMap: '/public/wood_floor/textures/wood_floor_diff_1k.jpg',
-  treadMaterialMap: '/public/wood_floor/textures/wood_floor_diff_1k.jpg',
+  riserMaterialMap: '/wood_floor/textures/wood_floor_diff_1k.jpg',
+  treadMaterialMap: '/wood_floor/textures/wood_floor_diff_1k.jpg',
   enableShadows: false
 }; 
 
