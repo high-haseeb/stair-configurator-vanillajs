@@ -18,7 +18,7 @@ const props = {
   treadMaterialMap: '/wood_floor/textures/wood_floor_diff_1k.jpg',
   enableShadows: false,
   showDimensions: true,
-  refSrc : "public/image.webp"
+  refSrc : "/image.webp"
 }; 
 
 const gui = new dat.GUI();
