@@ -24,6 +24,7 @@ export class TopView extends StairView {
           name: "depth",
           color: "red",
           value: this.props.stepDepth,
+          letter: "A",
         },
         {
           x: this.centerX - this.scaledStepWidth / 2,
@@ -35,11 +36,12 @@ export class TopView extends StairView {
           name: "width",
           color: "blue",
           value: this.props.stepWidth,
+          letter: "B",
         },
       ];
 
       this.legends.forEach((mark) => {
-        this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? mark.text : "", mark.color);
+        this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? mark.letter : "", mark.color);
       });
       this.createLegends();
     }

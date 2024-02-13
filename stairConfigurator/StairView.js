@@ -83,7 +83,12 @@ export class StairView {
       const legendValue = document.createElement("div");
       legendValue.style.flexGrow = "1";
       legendValue.style.textAlign = "right";
-      legendValue.innerText = `${legendData.value * 100} mm`;
+      legendValue.innerText = `${legendData.value.toFixed(2) * 100} mm`;
+
+      const legendLetter = document.createElement("div");
+      // legendLetter.style.flexGrow = "1";
+      legendLetter.style.textAlign = "right";
+      legendLetter.innerText = `${legendData.letter}`;
 
       const legendLine = document.createElement("div");
       legendLine.style.display = "flex";
@@ -94,6 +99,7 @@ export class StairView {
       legendLine.appendChild(legendName);
       legendLine.appendChild(legendValue);
       legendLine.appendChild(legendColor);
+      legendLine.appendChild(legendLetter);
 
       this.legendContainer.appendChild(legendLine);
     });
@@ -132,5 +138,17 @@ export class StairView {
     }
 
     this.ctx.stroke();
+  }
+  dispose() {
+    // Remove event listener
+    window.removeEventListener("resize", () => this.update());
+
+    // Clear canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Remove legend container
+    if (this.legendContainer && this.legendContainer.parentNode) {
+      this.legendContainer.parentNode.removeChild(this.legendContainer);
+    }
   }
 }

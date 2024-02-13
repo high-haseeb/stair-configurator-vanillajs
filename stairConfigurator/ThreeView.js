@@ -110,10 +110,44 @@ export class ThreeView {
     this.camera.updateProjectionMatrix();
   }
 
+  async update() {
+    const { numSteps, stepWidth, stepHeight, stepDepth, riserThickness, treadThickness, nosing } = this.props;
+
+    // Clear existing stairs
+    if (this.stairs) {
+      this.dispose();
+      this.scene.remove(this.stairs);
+      this.stairs = null;
+    }
+
+    // Create new stairs
+    await this.createStairs();
+
+    // Update camera position
+    this.totalWidth = numSteps * stepDepth;
+    this.totalHeight = numSteps * stepHeight;
+    // this.stairs.position.setZ(this.totalWidth / 2);
+    // this.camera.position.setZ(this.totalWidth * 2);
+
+    // Add shadow plane if necessary
+    if (this.props.enableShadows) {
+      this.addShadowPlane();
+    }
+
+    // Render the scene
+    this.render();
+  }
+
   render() {
     requestAnimationFrame(() => this.render());
     this.renderer.render(this.scene, this.camera);
     this.stairs.rotation.y += 0.004;
     this.controls.update();
+  }
+
+  dispose() {
+    this.stairs.children.forEach((child) => {
+      child.geometry.dispose();
+    });
   }
 }

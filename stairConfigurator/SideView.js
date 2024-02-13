@@ -36,6 +36,7 @@ export class SideView extends StairView {
         name: "riser thickness",
         color: "orange",
         value: this.props.riserThickness,
+        letter: "A"
       },
       {
         name: "tread thickness",
@@ -47,6 +48,7 @@ export class SideView extends StairView {
         hor: false,
         offset: this.scaledStepDepth + 20,
         text: `${this.props.treadThickness * 100}mm`,
+        letter: "B"
       },
       {
         x: this.horizontalOffset + 2 * this.scaledStepDepth,
@@ -58,6 +60,7 @@ export class SideView extends StairView {
         name: "nosing",
         color: "darkred",
         value: this.props.nosing,
+        letter: "C"
       },
       {
         x: this.horizontalOffset + this.scaledStepDepth,
@@ -66,9 +69,10 @@ export class SideView extends StairView {
         hor: true,
         offset: 10,
         text: `${this.props.stepDepth * 100}mm`,
-        name: "step depth",
+        name: "Individual going",
         color: "pink",
         value: this.props.stepDepth,
+        letter: "D"
       },
       {
         x: this.horizontalOffset + 3 * this.scaledStepDepth,
@@ -77,14 +81,15 @@ export class SideView extends StairView {
         hor: false,
         offset: -40,
         text: `${this.props.stepHeight * 100}mm`,
-        name: "step height",
+        name: "Riser Height",
         color: "violet",
         value: this.props.stepHeight,
+        letter: "E"
       },
     ];
 
     this.legends.forEach((mark) => {
-      this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? mark.text : "", mark.color);
+      this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? mark.letter : "", mark.color);
     });
   }
 }
