@@ -29,8 +29,15 @@ export class StairView {
 
     this.padding = 100;
     this.totalHeight = numSteps * (stepHeight + treadThickness);
+    this.totalDepth = numSteps * stepDepth;
+    this.totalWidth = numSteps * stepWidth;
     this.containerHeight = this.canvas.height - this.padding;
-    this.scale = this.containerHeight / this.totalHeight;
+    this.containerWidth = this.canvas.width - this.padding;
+    const scaleHeight = this.containerHeight / this.totalHeight;
+    const scaleWidth = this.containerWidth / this.totalDepth;
+
+    // Choose the smaller scale to ensure the entire object fits within the container
+    this.scale = Math.min(scaleHeight, scaleWidth);
 
     this.centerX = this.canvas.width / 2;
     this.centerY = this.canvas.height / 2;
@@ -54,6 +61,7 @@ export class StairView {
     // Override this method in child classes for specific drawing logic
   }
   createLegends() {
+    this.imgVisible = false;
     this.legendContainer = document.createElement("div");
     this.legendContainer.style.display = "flex";
     this.legendContainer.style.flexDirection = "column";
@@ -98,12 +106,51 @@ export class StairView {
       legendLine.style.gap = "1rem";
       legendLine.appendChild(legendName);
       legendLine.appendChild(legendValue);
-      legendLine.appendChild(legendColor);
-      legendLine.appendChild(legendLetter);
+      // legendLine.appendChild(legendLetter);
 
       this.legendContainer.appendChild(legendLine);
     });
+    const imgButton = document.createElement("button");
+    imgButton.innerText = "i";
+    imgButton.onclick = () => this.toggleRef();
+    imgButton.style.position = "absolute";
+    imgButton.style.display = "flex";
+    imgButton.style.alignItems = "center";
+    imgButton.style.justifyContent = "center";
+    imgButton.style.top = "10px";
+    imgButton.style.right = "10px";
+    imgButton.style.padding = "10px";
+    imgButton.style.zIndex = "10";
+    imgButton.style.backgroundColor = "black";
+    imgButton.style.color = "white";
+    imgButton.style.width = "2rem";
+    imgButton.style.borderRadius = "3rem";
+    imgButton.style.height = "2rem";
+    this.container.appendChild(imgButton);
     this.container.appendChild(this.legendContainer);
+
+    this.img = document.createElement("img");
+    this.img.style.backgroundColor = "green";
+    this.img.style.zIndex = 999;
+    this.img.style.position = "absolute";
+    this.img.style.top = `${this.padding / 2}px`;
+    this.img.style.left = `${this.padding / 2}px`;
+    this.img.style.borderRadius = "3rem";
+    this.img.style.width = `${this.container.clientWidth - this.padding}px`; // Use style.width for div elements
+    this.img.style.height = `${this.container.clientHeight - this.padding}px`; // Use style.width for div elements
+    this.img.style.visibility = "hidden";
+    this.img.src = this.props.refSrc || "";
+    this.img.style.backgroundSize = "cover"
+    this.container.appendChild(this.img);
+  }
+  toggleRef() {
+    if (!this.imgVisible) {
+      this.img.style.visibility = "visible";
+      this.imgVisible = true;
+    } else {
+      this.img.style.visibility = "hidden";
+      this.imgVisible = false;
+    }
   }
   createMark(x, y, length, size, hor = false, offset, text, color) {
     this.ctx.strokeStyle = color;
