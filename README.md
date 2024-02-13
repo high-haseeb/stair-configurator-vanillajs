@@ -16,6 +16,7 @@
 12. `riserMaterialMap` (string): The URL of the texture map for the riser material.
 13. `treadMaterialMap` (string): The URL of the texture map for the tread material.
 14. `enableShadows` (boolean): Whether to enable shadows in the 3D view of the stairs.
+15. `showDimensions` (boolean): Whether to show the dimensions
 
 ## Usage
 
