@@ -110,7 +110,7 @@ export class SideView extends StairView {
       },
     ];
     this.legends.forEach((mark) => {
-      this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${mark.value.toFixed(1) * 100}mm` : "", mark.color);
+      this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", mark.color);
     });
   }
 }

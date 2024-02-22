@@ -6,6 +6,17 @@ export class TopView extends StairView {
   }
   drawStep() {
 
+    const { numSteps, stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } = this.props;
+    // this.scale = Math.min(this.containerWidth / this.totalWidth, this.containerHeight / this.totalDepth);
+    this.scale = this.containerHeight / this.totalDepth;
+    // this.scale *= 2;
+    this.scaledStepHeight = stepHeight * this.scale;
+    this.scaledStepDepth = stepDepth * this.scale;
+    this.scaledStepWidth = stepWidth * this.scale;
+    this.scaledRiserThickness = riserThickness * this.scale;
+    this.scaledTreadThickness = treadThickness * this.scale;
+    this.scaledNosing = nosing * this.scale;
+
     for (let i = 0; i < this.props.numSteps; i++) {
       const stepY = this.centerY + i * this.scaledStepDepth - (this.props.numSteps * this.scaledStepDepth) / 2 - this.scaledNosing;
       this.ctx.fillRect(this.centerX - this.scaledStepWidth / 2, stepY, this.scaledStepWidth, this.scaledStepDepth + this.scaledNosing);
@@ -42,7 +53,7 @@ export class TopView extends StairView {
       ];
 
       this.legends.forEach((mark) => {
-        this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${mark.value * 100}mm` : "", mark.color);
+        this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", mark.color);
       });
       this.createLegends();
     }

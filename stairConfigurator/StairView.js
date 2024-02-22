@@ -77,21 +77,39 @@ export class StairView {
     this.legendContainer.style.width = "auto";
     this.legendContainer.style.height = "auto";
     this.legendContainer.style.borderRadius = "1rem";
+    this.legendContainer.style.fontSize = "14px";
 
     this.legends.map((legendData, index) => {
       const legendName = document.createElement("div");
       legendName.innerText = legendData.name;
 
-      const legendColor = document.createElement("div");
-      legendColor.style.width = "40px";
-      legendColor.style.height = "10px";
-      legendColor.style.backgroundColor = legendData.color;
-      legendColor.style.borderRadius = "1rem";
+      // const legendColor = document.createElement("div");
+      // legendColor.style.width = "40px";
+      // legendColor.style.height = "10px";
+      // legendColor.style.backgroundColor = legendData.color;
+      // legendColor.style.borderRadius = "1rem";
+       
+      // i icon
+      const i = document.createElement("div");
+      i.innerText = "i";
+      i.style.backgroundColor = "black";
+      i.style.fontWeight = "bold";
+      i.style.color = "white";
+      i.style.width = "1rem";
+      i.style.borderRadius = "3rem";
+      i.style.height = "1rem";
+      i.style.display = "flex";
+      i.style.alignItems = "center";
+      i.style.justifyContent = "center";
+      i.style.cursor = "pointer";
+      i.onclick = () => {
+        this.toggleRef()
+        }
 
       const legendValue = document.createElement("div");
       legendValue.style.flexGrow = "1";
       legendValue.style.textAlign = "right";
-      legendValue.innerText = `${legendData.value.toFixed(2) * 100} mm`;
+      legendValue.innerText = `${(legendData.value * 100).toFixed(0)} mm`;
 
       const legendLetter = document.createElement("div");
       // legendLetter.style.flexGrow = "1";
@@ -106,27 +124,28 @@ export class StairView {
       legendLine.style.gap = "1rem";
       legendLine.appendChild(legendName);
       legendLine.appendChild(legendValue);
+      legendLine.appendChild(i);
       // legendLine.appendChild(legendLetter);
 
       this.legendContainer.appendChild(legendLine);
     });
-    const imgButton = document.createElement("button");
-    imgButton.innerText = "i";
-    imgButton.onclick = () => this.toggleRef();
-    imgButton.style.position = "absolute";
-    imgButton.style.display = "flex";
-    imgButton.style.alignItems = "center";
-    imgButton.style.justifyContent = "center";
-    imgButton.style.top = "10px";
-    imgButton.style.right = "10px";
-    imgButton.style.padding = "10px";
-    imgButton.style.zIndex = "10";
-    imgButton.style.backgroundColor = "black";
-    imgButton.style.color = "white";
-    imgButton.style.width = "2rem";
-    imgButton.style.borderRadius = "3rem";
-    imgButton.style.height = "2rem";
-    this.container.appendChild(imgButton);
+    // const imgButton = document.createElement("button");
+    // imgButton.innerText = "i";
+    // imgButton.onclick = () => this.toggleRef();
+    // imgButton.style.position = "absolute";
+    // imgButton.style.display = "flex";
+    // imgButton.style.alignItems = "center";
+    // imgButton.style.justifyContent = "center";
+    // imgButton.style.top = "10px";
+    // imgButton.style.right = "10px";
+    // imgButton.style.padding = "10px";
+    // imgButton.style.zIndex = "10";
+    // imgButton.style.backgroundColor = "black";
+    // imgButton.style.color = "white";
+    // imgButton.style.width = "2rem";
+    // imgButton.style.borderRadius = "3rem";
+    // imgButton.style.height = "2rem";
+    // this.container.appendChild(imgButton);
     this.container.appendChild(this.legendContainer);
 
     this.img = document.createElement("img");
@@ -142,12 +161,33 @@ export class StairView {
     this.img.src = this.props.refSrc || "";
     this.img.style.backgroundSize = "cover"
     this.container.appendChild(this.img);
+    this.imgCloseButton = document.createElement("button");
+    this.imgCloseButton.innerText = "X";
+    this.imgCloseButton.style.position = "absolute";
+    this.imgCloseButton.style.display = "flex";
+    this.imgCloseButton.style.alignItems = "center";
+    this.imgCloseButton.style.justifyContent = "center";
+    this.imgCloseButton.style.top = "10px";
+    this.imgCloseButton.style.right = "10px";
+    this.imgCloseButton.style.padding = "10px";
+    this.imgCloseButton.style.zIndex = "10";
+    this.imgCloseButton.style.backgroundColor = "black";
+    this.imgCloseButton.style.color = "white";
+    this.imgCloseButton.style.width = "2rem";
+    this.imgCloseButton.style.borderRadius = "3rem";
+    this.imgCloseButton.style.height = "2rem";
+    this.imgCloseButton.onclick = () => this.toggleRef();
+    this.imgCloseButton.style.visibility = "hidden";
+    this.container.appendChild(this.imgCloseButton);
+
   }
   toggleRef() {
     if (!this.imgVisible) {
       this.img.style.visibility = "visible";
+      this.imgCloseButton.style.visibility = "visible";
       this.imgVisible = true;
     } else {
+      this.imgCloseButton.style.visibility = "hidden";
       this.img.style.visibility = "hidden";
       this.imgVisible = false;
     }

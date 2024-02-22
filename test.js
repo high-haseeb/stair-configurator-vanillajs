@@ -10,9 +10,9 @@ const props = {
   stepWidth: 20,
   stepDepth: 2.5,
   numSteps: 16,
-  riserThickness: 0.3,
-  treadThickness: 0.25,
-  nosing: 0.2,
+  riserThickness: 0.8,
+  treadThickness: 0.5,
+  nosing: 0.8,
   showProps: true,
   riserMaterialMap: '/wood_floor/textures/wood_floor_diff_1k.jpg',
   treadMaterialMap: '/wood_floor/textures/wood_floor_diff_1k.jpg',
@@ -40,5 +40,9 @@ const config = new StairConfigurator(props)
 function updateProps() {
   config.dispose()
   config.update()
-
 }
+
+// import { StirConfigurator } from "./stairConfigurator/newStyle";
+
+// }
+// const configurator = new StirConfigurator("parent");
