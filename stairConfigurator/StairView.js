@@ -209,7 +209,7 @@ export class StairView {
 
       this.ctx.moveTo(x + length, y + size);
       this.ctx.lineTo(x + length, y - size);
-      this.ctx.fillText(text, x, y + 15);
+      this.ctx.fillText(text, x + length / 2, y - 15);
     } else {
       x += offset;
       this.ctx.moveTo(x + size, y);
@@ -221,7 +221,7 @@ export class StairView {
       this.ctx.moveTo(x + size, y + length);
       this.ctx.lineTo(x - size, y + length);
 
-      this.ctx.fillText(text, x + 15, y);
+      this.ctx.fillText(text, x + 15, y + length / 2);
     }
 
     this.ctx.stroke();

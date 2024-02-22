@@ -90,11 +90,11 @@ export class SideView extends StairView {
     this.legends = [
       {
         name: "total height",
-        x: this.horizontalOffset + this.totalDepth * this.scale,
+        x: this.horizontalOffset + this.totalDepth * this.scale + 20,
         y: this.verticalOffset - this.totalHeight * this.scale + this.scaledStepHeight,
         length: this.totalHeight * this.scale,
         offset: 0,
-        color: "red",
+        color: "black",
         hor: false,
         value: this.totalHeight
       },
@@ -104,7 +104,7 @@ export class SideView extends StairView {
         y: this.verticalOffset,
         length: this.totalDepth * this.scale,
         offset: 20,
-        color: "red",
+        color: "black",
         hor: true,
         value: this.totalDepth,
       },
