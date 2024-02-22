@@ -8,7 +8,7 @@ export class TopView extends StairView {
 
     const { numSteps, stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } = this.props;
     // this.scale = Math.min(this.containerWidth / this.totalWidth, this.containerHeight / this.totalDepth);
-    this.scale = this.containerHeight / this.totalDepth;
+    this.scale = Math.min(this.containerHeight / this.totalDepth, 10);
     // this.scale *= 2;
     this.scaledStepHeight = stepHeight * this.scale;
     this.scaledStepDepth = stepDepth * this.scale;
