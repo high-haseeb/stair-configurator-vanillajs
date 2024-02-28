@@ -99,6 +99,10 @@ export class ThreeView {
     const { numSteps, stepWidth, stepHeight, stepDepth, riserThickness, treadThickness, nosing } = this.props;
     const riserGeometry = new THREE.BoxGeometry(stepWidth, stepHeight, riserThickness);
     const material = new THREE.MeshStandardMaterial({ color: "white", roughness: 0.5 });
+    if(this.props.riserMaterialMap){
+      const texture = new THREE.TextureLoader().load(this.props.riserMaterialMap);
+      material.map = texture;
+    }
 
     const treadGeometry = new THREE.BoxGeometry(stepWidth, treadThickness, stepDepth + nosing + treadThickness);
 
