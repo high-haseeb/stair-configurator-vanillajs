@@ -4,18 +4,15 @@ import { TopView } from "./TopView";
 
 export class StairConfigurator {
   constructor(props) {
-    this.side = new SideView(props);
-    this.top  = new TopView(props);
+    this.side  = new SideView(props);
+    this.top   = new TopView(props);
     this.three = new ThreeView(props);
   }
-  dispose(){
-    this.top.dispose()
-    this.side.dispose()
+  update() {
+    this.top.dispose();
+    this.side.dispose();
+    this.top.update();
+    this.side.update();
+    this.three.updateStairs();
   }
-  update(){
-    this.top.update()
-    this.side.update()
-  }
-
 }
-

@@ -1,127 +1,134 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
-import { Text } from "troika-three-text";
-import FindSurfaces from "./FindSurfaces";
-
 import { CustomOutlinePass } from "./outlinePass";
+import FindSurfaces from "./FindSurfaces";
 
 export class ThreeView {
   constructor(props) {
     this.props = props;
     this.containerId = props.threeVeiwDivId;
     this.container = document.getElementById(this.containerId);
+
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xffffff);
-    // this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
+
     this.camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 1000);
-    // this.camera.position.set(1, 1, 1);
 
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     this.container.appendChild(this.renderer.domElement);
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.25;
     this.controls.maxPolarAngle = Math.PI / 2;
     this.controls.minPolarAngle = -Math.PI * 2;
-    // this.conrtols should only rotate about y axis
-    // this.controls.enableRotate = false;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.25;
+
+    this.init();
+    window.addEventListener("resize", () => this.onWindowResize());
+  }
+  createStairMaterial() {
+    this.stairMaterial = new THREE.MeshPhysicalMaterial({ color: "white", roughness: 0.5 });
+    if (this.props.texture)
+      this.stairMaterial.map = new THREE.TextureLoader().load(this.props.texture);
+  }
+  init() {
+    this.createStairMaterial();
     this.createStairs();
     this.createLights();
-    this.createGround();
-    // this.createText();
+    this.props.showGround && this.createGround();
 
-    const depthTexture = new THREE.DepthTexture();
-    const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
-      depthTexture: depthTexture,
-      depthBuffer: true,
-    });
+    this.props.showOutline ? this.outline() : this.render();
+  }
+
+  outline() {
+    const renderTarget = new THREE.WebGLRenderTarget(
+      this.container.clientWidth,
+      this.container.clientHeight,
+      {
+        depthTexture: new THREE.DepthTexture(),
+        depthBuffer: true,
+      },
+    );
     this.composer = new EffectComposer(this.renderer, renderTarget);
-    const pass = new RenderPass(this.scene, this.camera);
-    this.composer.addPass(pass);
+    this.composer.addPass(new RenderPass(this.scene, this.camera));
 
     // Outline pass.
-    const customOutline = new CustomOutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this.scene, this.camera);
-    this.composer.addPass(customOutline);
+    this.customOutline = new CustomOutlinePass(
+      new THREE.Vector2(this.container.clientWidth, this.container.clientHeight),
+      this.scene,
+      this.camera,
+    );
+    this.composer.addPass(this.customOutline);
 
     // Antialias pass.
     const effectFXAA = new ShaderPass(FXAAShader);
-    effectFXAA.uniforms["resolution"].value.set(1 / window.innerWidth, 1 / window.innerHeight);
+    effectFXAA.uniforms["resolution"].value.set(
+      1 / this.container.clientWidth,
+      1 / this.container.clientHeight,
+    );
     this.composer.addPass(effectFXAA);
-    const surfaceFinder = new FindSurfaces();
-    this.render();
+    this.surfaceFinder = new FindSurfaces();
 
-    addSurfaceIdAttributeToMesh(this.stairs);
-    addSurfaceIdAttributeToMesh(this.ground);
-    function addSurfaceIdAttributeToMesh(scene) {
-      surfaceFinder.surfaceId = 0;
-
-      scene.traverse((node) => {
-        if (node.type == "Mesh") {
-          const colorsTypedArray = surfaceFinder.getSurfaceIdAttribute(node);
-          node.geometry.setAttribute("color", new THREE.BufferAttribute(colorsTypedArray, 4));
-        }
-      });
-
-      customOutline.updateMaxSurfaceId(surfaceFinder.surfaceId + 1);
-    }
-
-    window.addEventListener("resize", () => this.onWindowResize());
+    this.renderOutline();
+    this.addSurfaceIdAttributeToMesh(this.stairs);
+    if (this.props.showGround) this.addSurfaceIdAttributeToMesh(this.ground);
   }
-  createText() {
-    const geometry = new THREE.BoxGeometry(0.1, this.totalHeight * 0.15, 0.1);
-    const material = new THREE.MeshBasicMaterial({ color: "black" });
-    const line = new THREE.Line(geometry, material);
-    line.rotation.y = -Math.PI / 2;
-    line.rotation.x = Math.PI / 10;
-    line.position.set(3, 0, 0);
-    this.scene.add(line);
 
-    const textMesh = new Text();
-    textMesh.text = "100mm";
-    textMesh.fontSize = 5;
-    textMesh.color = "black";
-    textMesh.position.set(20, 7, 1); // Adjust position as needed
-    textMesh.rotation.setFromRotationMatrix(this.stairs.matrixWorld);
+  addSurfaceIdAttributeToMesh(scene) {
+    this.surfaceFinder.surfaceId = 0;
 
-    this.scene.add(textMesh);
-    this.stairs.add(textMesh);
+    scene.traverse((node) => {
+      if (node.type == "Mesh") {
+        const colorsTypedArray = this.surfaceFinder.getSurfaceIdAttribute(node);
+        node.geometry.setAttribute("color", new THREE.BufferAttribute(colorsTypedArray, 4));
+      }
+    });
+    this.customOutline.updateMaxSurfaceId(this.surfaceFinder.surfaceId + 1);
   }
+
   createStairs() {
-    const { numSteps, stepWidth, stepHeight, stepDepth, riserThickness, treadThickness, nosing } = this.props;
-    const riserGeometry = new THREE.BoxGeometry(stepWidth, stepHeight, riserThickness);
-    const material = new THREE.MeshStandardMaterial({ color: "white", roughness: 0.5 });
-    if(this.props.riserMaterialMap){
-      const texture = new THREE.TextureLoader().load(this.props.riserMaterialMap);
-      material.map = texture;
-    }
+    const { numSteps, stepWidth, stepHeight, stepDepth, riserThickness, treadThickness, nosing } =
+      this.props;
 
-    const treadGeometry = new THREE.BoxGeometry(stepWidth, treadThickness, stepDepth + nosing + treadThickness);
+    const riserGeometry = new THREE.BoxGeometry(stepWidth, stepHeight, riserThickness);
+    const treadGeometry = new THREE.BoxGeometry(
+      stepWidth,
+      treadThickness,
+      stepDepth + nosing + treadThickness,
+    );
 
     this.stairs = new THREE.Group();
     for (let i = 0; i < numSteps; i++) {
-      const riser = new THREE.Mesh(riserGeometry, material);
-      riser.castShadow = true;
-      riser.position.set(0, i * stepHeight + i * treadThickness, i * -stepDepth - treadThickness / 2 + riserThickness / 2);
+      const riser = new THREE.Mesh(riserGeometry, this.stairMaterial);
+      const tread = new THREE.Mesh(treadGeometry, this.stairMaterial);
 
-      const tread = new THREE.Mesh(treadGeometry, material);
-      tread.castShadow = true;
+      riser.position.set(
+        0,
+        i * stepHeight + i * treadThickness,
+        i * -stepDepth - treadThickness / 2 + riserThickness / 2,
+      );
+
       tread.position.set(
         0,
         i * stepHeight + stepHeight / 2 + i * treadThickness + treadThickness / 2,
         i * stepDepth * -1 - stepDepth / 2 + nosing / 2,
       );
+
+      tread.castShadow = tread.receiveShadow = this.props.shadows;
+      riser.castShadow = riser.receiveShadow = this.props.shadows;
       this.stairs.add(riser, tread);
     }
 
+    // center the stairs
     const center = new THREE.Vector3();
     this.stairs.children.forEach((object) => center.add(object.position));
     center.divideScalar(this.stairs.children.length);
@@ -129,6 +136,7 @@ export class ThreeView {
       object.position.sub(center);
     });
 
+    // isometric view
     this.stairs.scale.set(0.15, 0.15, 0.15);
     this.stairs.rotation.y = -Math.PI / 4;
     this.stairs.rotation.x = Math.PI / 10;
@@ -141,19 +149,15 @@ export class ThreeView {
 
   createLights() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    this.scene.add(ambientLight);
 
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 4);
-    this.directionalLight.position.set(-5, 6, 0);
-    this.directionalLight.castShadow = true;
-    this.scene.add(this.directionalLight);
-    this.spotLight = new THREE.SpotLight(0xffffff, 1);
-    this.spotLight.position.set(0, 10, 0);
-    this.spotLight.target.position.set(0, 0, 0);
-    this.spotLight.angle = Math.PI / 4;
-    this.spotLight.penumbra = 0.5;
-    this.spotLight.castShadow = true;
-    this.scene.add(this.spotLight);
+    this.dl_bottom = new THREE.DirectionalLight(0xffffff, 1);
+    this.dl_bottom.position.set(-3, 0, 0);
+    this.dl_top = new THREE.DirectionalLight(0xffffff, 3);
+    this.dl_top.position.set(-3, 4, 0);
+    this.dl_right = new THREE.DirectionalLight(0xffffff, 1);
+    this.dl_right.position.set(4, 0, 0);
+
+    this.scene.add(ambientLight, this.dl_bottom, this.dl_top, this.dl_right);
   }
 
   onWindowResize() {
@@ -161,27 +165,76 @@ export class ThreeView {
     this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
     this.camera.updateProjectionMatrix();
   }
+
   createGround() {
-    this.ground = new THREE.Mesh(new THREE.BoxGeometry(7, 0.5, 10), new THREE.MeshPhysicalMaterial({ color: "#019C01" }));
+    this.ground = new THREE.Mesh(
+      new THREE.BoxGeometry(7, 0.5, 10),
+      new THREE.MeshPhysicalMaterial({ color: "#019C01" }),
+    );
+    // isometric view
     this.ground.position.y = -(this.totalHeight * 0.15) / 2 - 0.5;
-    // this.ground.scale.set(0.15, 0.15, 0.15);
     this.ground.rotation.x = Math.PI / 10;
     this.ground.rotation.y = -Math.PI / 4;
-    this.ground.receiveShadow = true;
+
+    this.ground.receiveShadow = this.ground.castShadow = this.props.shadows;
     this.scene.add(this.ground);
   }
 
-  render() {
-    requestAnimationFrame(() => this.render());
-    // this.renderer.render(this.scene, this.camera);
-    this.controls.update();
+  renderOutline() {
+    this.animamtionId = requestAnimationFrame(() => this.renderOutline());
     this.composer.render();
-    // this.stairs.rotation.y += 0.004;
+    this.controls.update();
+  }
+  render() {
+    this.animamtionId = requestAnimationFrame(() => this.render());
+    this.renderer.render(this.scene, this.camera);
+    this.controls.update();
   }
 
   dispose() {
-    this.stairs.children.forEach((child) => {
-      child.geometry.dispose();
-    });
+    this.stairs.children.forEach((child) => child.geometry.dispose());
+  }
+  updateMaterial() {
+    this.stairMaterial.map = new THREE.TextureLoader().load(this.props.texture);
+  }
+  updateOutline() {
+    cancelAnimationFrame(this.animamtionId);
+    if (this.props.showOutline) {
+      this.dl_top.intensity = 3;
+      this.dl_right.intensity = 1;
+      this.dl_bottom.intensity = 1;
+      this.renderOutline();
+    } else {
+      this.dl_top.intensity = 1;
+      this.dl_right.intensity = 1;
+      this.dl_bottom.intensity = 1;
+      this.render();
+    }
+  }
+  updateGround() {
+    if (this.props.showGround) {
+      this.createGround();
+    } else {
+      if (this.ground) {
+        this.scene.remove(this.ground);
+        this.ground.geometry.dispose();
+        this.ground.material.dispose();
+      }
+    }
+  }
+  updateStairs() {
+    this.scene.remove(this.stairs);
+    this.stairs.children.forEach((child) => child.geometry.dispose());
+    this.stairs.children.forEach((child) => child.material.dispose());
+
+    if (this.props.showGround) {
+      this.scene.remove(this.ground);
+      this.ground.geometry.dispose();
+      this.ground.material.dispose();
+      this.updateGround();
+    }
+
+    this.createStairs();
+    this.addSurfaceIdAttributeToMesh(this.stairs);
   }
 }
