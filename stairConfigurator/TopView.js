@@ -6,10 +6,8 @@ export class TopView extends StairView {
   }
   drawStep() {
 
-    const { numSteps, stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } = this.props;
-    // this.scale = Math.min(this.containerWidth / this.totalWidth, this.containerHeight / this.totalDepth);
+    const { stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } = this.props;
     this.scale = Math.min(this.containerHeight / this.totalDepth, 10);
-    // this.scale *= 2;
     this.scaledStepHeight = stepHeight * this.scale;
     this.scaledStepDepth = stepDepth * this.scale;
     this.scaledStepWidth = stepWidth * this.scale;
@@ -27,34 +25,32 @@ export class TopView extends StairView {
       const stepY = this.centerY - (this.props.numSteps * this.scaledStepDepth) / 2 - this.scaledNosing;
       const legends = [
         {
-          x: this.centerX + this.scaledStepWidth / 2,
-          y: stepY,
+          x:      this.centerX + this.scaledStepWidth / 2,
+          y:      stepY,
           length: this.totalDepth * this.scale,
-          hor: false,
+          hor:    false,
           offset: 15,
-          text: `${this.props.stepDepth * 100}mm`,
-          name: "depth",
-          color: "black",
-          value: this.props.stepDepth,
+          text:   `${this.props.stepDepth * 100}mm`,
+          name:   "depth",
+          value:  this.props.stepDepth,
           letter: "A",
         },
         {
-          x: this.centerX - this.scaledStepWidth / 2,
+          x:      this.centerX - this.scaledStepWidth / 2,
           length: this.scaledStepWidth,
-          y: stepY,
-          hor: true,
+          y:      stepY,
+          hor:    true,
           offset: -15,
-          text: `${this.props.stepWidth * 100}mm`,
-          name: "width",
-          color: "black",
-          value: this.props.stepWidth,
+          text:   `${this.props.stepWidth * 100}mm`,
+          name:   "width",
+          value:  this.props.stepWidth,
           letter: "B",
         },
       ];
 
       this.props.showDimensions &&
-      legends.forEach((mark) => {
-        this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", mark.color);
+      legends.forEach(mark => {
+        this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", "black");
       });
       this.createLegends(legends);
     }

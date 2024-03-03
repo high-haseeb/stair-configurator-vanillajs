@@ -7,6 +7,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { CustomOutlinePass } from "./outlinePass";
 import FindSurfaces from "./FindSurfaces";
+import { TextureLoader } from "three";
 
 export class ThreeView {
   constructor(props) {
@@ -37,8 +38,8 @@ export class ThreeView {
   }
   createStairMaterial() {
     this.stairMaterial = new THREE.MeshPhysicalMaterial();
-    if (this.props.texture)
-      this.stairMaterial.map = new THREE.TextureLoader().load(this.props.texture);
+    this.textureLoader = new TextureLoader();
+    if (this.props.texture) this.stairMaterial.map = this.textureLoader.load(this.props.texture);
   }
   init() {
     this.createStairMaterial();
@@ -148,13 +149,16 @@ export class ThreeView {
   }
 
   createLights() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 
     this.dl_bottom = new THREE.DirectionalLight(0xffffff, 1);
+    this.dl_bottom.castShadow = true;
     this.dl_bottom.position.set(-3, 0, 0);
     this.dl_top = new THREE.DirectionalLight(0xffffff, 3);
+    this.dl_top.castShadow = true;
     this.dl_top.position.set(-3, 4, 0);
     this.dl_right = new THREE.DirectionalLight(0xffffff, 1);
+    this.dl_right.castShadow = true
     this.dl_right.position.set(4, 0, 0);
 
     this.scene.add(ambientLight, this.dl_bottom, this.dl_top, this.dl_right);
@@ -195,19 +199,20 @@ export class ThreeView {
     this.stairs.children.forEach((child) => child.geometry.dispose());
   }
   updateMaterial() {
-    this.stairMaterial.map = new THREE.TextureLoader().load(this.props.texture);
+    this.stairMaterial.map = this.textureLoader.load(this.props.texture);
   }
   updateOutline() {
     cancelAnimationFrame(this.animamtionId);
     if (this.props.showOutline) {
+      this.outline();
       this.dl_top.intensity = 3;
       this.dl_right.intensity = 1;
       this.dl_bottom.intensity = 1;
       this.renderOutline();
     } else {
-      this.dl_top.intensity = 1;
-      this.dl_right.intensity = 1;
-      this.dl_bottom.intensity = 1;
+      this.dl_top.intensity = 2;
+      this.dl_right.intensity = 2;
+      this.dl_bottom.intensity = 2;
       this.render();
     }
   }
@@ -235,6 +240,6 @@ export class ThreeView {
     }
 
     this.createStairs();
-    this.addSurfaceIdAttributeToMesh(this.stairs);
+    this.props.showOutline && this.addSurfaceIdAttributeToMesh(this.stairs);
   }
 }

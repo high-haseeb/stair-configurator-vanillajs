@@ -52,7 +52,7 @@ export class SideView extends StairView {
       { name: "step height",      value: this.props.stepHeight.toFixed(2),     image: "riser_length.png"},
     ];
     this.props.showDimensions &&
-    legends.forEach((mark) => {
+    legends.forEach(mark => {
       this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", "black");
     });
     this.createLegends(legends);

@@ -18,7 +18,7 @@ const props = {
   refSrc: "/image.webp",
 
   texture: "/public/textures/marble.jpg",
-  showOutline: true,
+  showOutline: false,
   showGround: true,
   shadows: true,
 };
@@ -26,7 +26,7 @@ const props = {
 const configurator = new StairConfigurator(props);
 const gui = new dat.GUI({ name: "config" });
 
-/* prettier-ignore */
+// prettier-ignore
 const update = () => configurator.update();
 const controllers = [
   { propName: "stepHeight",     min: 1,   max: 10, step: 0.1, name: "step height",    onChange: update },
@@ -43,6 +43,7 @@ const controllers = [
   { propName: "showGround",  name: "show ground",  onChange: () => configurator.three.updateGround()   },
   { propName: "shadows",     name: "shadows",      onChange: update },
 ]
+
 controllers.forEach((ctrl) => {
   const controller = gui.add(props, ctrl.propName, ctrl.min, ctrl.max, ctrl.step);
   controller.name(ctrl.name);
