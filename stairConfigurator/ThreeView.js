@@ -36,7 +36,7 @@ export class ThreeView {
     window.addEventListener("resize", () => this.onWindowResize());
   }
   createStairMaterial() {
-    this.stairMaterial = new THREE.MeshPhysicalMaterial({ color: "white", roughness: 0.5 });
+    this.stairMaterial = new THREE.MeshPhysicalMaterial();
     if (this.props.texture)
       this.stairMaterial.map = new THREE.TextureLoader().load(this.props.texture);
   }

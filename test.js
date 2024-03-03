@@ -17,7 +17,7 @@ const props = {
   showDimensions: true,
   refSrc: "/image.webp",
 
-  texture: "/public/marble.jpg",
+  texture: "/public/textures/marble.jpg",
   showOutline: true,
   showGround: true,
   shadows: true,

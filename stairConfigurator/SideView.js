@@ -19,84 +19,21 @@ export class SideView extends StairView {
       this.ctx.strokeRect(treadX, treadY, this.scaledStepDepth + this.scaledNosing + this.scaledRiserThickness, this.scaledTreadThickness);
     }
 
-    if (this.props.showProps) {
-      this.showMarks();
-      this.createLegends();
-    }
+    this.props.showProps && this.showLegends();
   }
-  showMarks() {
-    // this.legends = [
-    //   {
-    //     x: this.horizontalOffset,
-    //     y: this.verticalOffset,
-    //     length: this.scaledRiserThickness,
-    //     hor: true,
-    //     offset: this.scaledStepHeight + 10,
-    //     text: `${this.props.riserThickness * 100}mm`,
-    //     name: "riser thickness",
-    //     color: "orange",
-    //     value: this.props.riserThickness,
-    //     letter: "A"
-    //   },
-    //   {
-    //     name: "tread thickness",
-    //     color: "blue",
-    //     value: this.props.treadThickness,
-    //     x: this.horizontalOffset,
-    //     y: this.verticalOffset,
-    //     length: -this.scaledTreadThickness,
-    //     hor: false,
-    //     offset: this.scaledStepDepth + 20,
-    //     text: `${this.props.treadThickness * 100}mm`,
-    //     letter: "B"
-    //   },
-    //   {
-    //     x: this.horizontalOffset + 2 * this.scaledStepDepth,
-    //     y: this.verticalOffset - 2 * (this.scaledStepHeight + this.scaledTreadThickness),
-    //     length: -this.scaledNosing,
-    //     hor: true,
-    //     offset: 10,
-    //     text: `${this.props.nosing * 100}mm`,
-    //     name: "nosing",
-    //     color: "darkred",
-    //     value: this.props.nosing,
-    //     letter: "C"
-    //   },
-    //   {
-    //     x: this.horizontalOffset + this.scaledStepDepth,
-    //     y: this.verticalOffset - (this.scaledStepHeight + this.scaledTreadThickness),
-    //     length: this.scaledStepDepth + this.scaledRiserThickness,
-    //     hor: true,
-    //     offset: 10,
-    //     text: `${this.props.stepDepth * 100}mm`,
-    //     name: "Individual going",
-    //     color: "pink",
-    //     value: this.props.stepDepth,
-    //     letter: "D"
-    //   },
-    //   {
-    //     x: this.horizontalOffset + 3 * this.scaledStepDepth,
-    //     y: this.verticalOffset - 3 * (this.scaledStepHeight + this.scaledTreadThickness) - this.scaledRiserThickness,
-    //     length: this.scaledStepHeight + this.scaledTreadThickness,
-    //     hor: false,
-    //     offset: -40,
-    //     text: `${this.props.stepHeight * 100}mm`,
-    //     name: "Riser Height",
-    //     color: "violet",
-    //     value: this.props.stepHeight,
-    //     letter: "E"
-    //   },
-    // ];
-    this.legends = [
+
+  showLegends() {
+
+    const legends = [
       {
-        name: "total height",
-        x: this.horizontalOffset + this.totalDepth * this.scale + 20,
-        y: this.verticalOffset - this.totalHeight * this.scale + this.scaledStepHeight,
+        name:   "total height",
+        x:      this.horizontalOffset + this.totalDepth * this.scale + 20,
+        y:      this.verticalOffset - this.totalHeight * this.scale + this.scaledStepHeight,
         length: this.totalHeight * this.scale,
         offset: 0,
-        color: "black",
-        hor: false,
-        value: this.totalHeight
+        hor:    false,
+        value:  this.totalHeight,
+        image: "total_height.png"
       },
       {
         name: "total depth",
@@ -104,13 +41,20 @@ export class SideView extends StairView {
         y: this.verticalOffset,
         length: this.totalDepth * this.scale,
         offset: 20,
-        color: "black",
         hor: true,
         value: this.totalDepth,
+        image: "total_width.png"
       },
+      { name: "nosing",           value: this.props.nosing.toFixed(2),         image: "nosing.png"},
+      { name: "individual going", value: this.props.stepDepth.toFixed(2),      image: "tread_length.png"},
+      { name: "tread thickness",  value: this.props.treadThickness.toFixed(2), image: "tread_thickness.png"},
+      { name: "riser thickness",  value: this.props.riserThickness.toFixed(2), image: "riser_thickness.png"},
+      { name: "step height",      value: this.props.stepHeight.toFixed(2),     image: "riser_length.png"},
     ];
-    this.legends.forEach((mark) => {
-      this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", mark.color);
+    this.props.showDimensions &&
+    legends.forEach((mark) => {
+      this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", "black");
     });
+    this.createLegends(legends);
   }
 }

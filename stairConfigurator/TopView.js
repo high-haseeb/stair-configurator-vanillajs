@@ -25,7 +25,7 @@ export class TopView extends StairView {
 
     if (this.props.showProps) {
       const stepY = this.centerY - (this.props.numSteps * this.scaledStepDepth) / 2 - this.scaledNosing;
-      this.legends = [
+      const legends = [
         {
           x: this.centerX + this.scaledStepWidth / 2,
           y: stepY,
@@ -52,10 +52,11 @@ export class TopView extends StairView {
         },
       ];
 
-      this.legends.forEach((mark) => {
+      this.props.showDimensions &&
+      legends.forEach((mark) => {
         this.createMark(mark.x, mark.y, mark.length, 4, mark.hor, mark.offset, this.props.showDimensions ? `${(mark.value * 100).toFixed(1)} mm` : "", mark.color);
       });
-      this.createLegends();
+      this.createLegends(legends);
     }
   }
 }
