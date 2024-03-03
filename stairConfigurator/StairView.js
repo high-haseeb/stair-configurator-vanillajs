@@ -117,7 +117,7 @@ export class StairView {
     image.style.width           = `${this.container.clientWidth - this.padding}px`;
     image.style.height          = `${this.container.clientHeight - this.padding}px`;
     image.style.visibility      = "hidden";
-    image.src                   = `/public/helper_images/${legend.image}` || "";
+    image.src                   = `/helper_images/${legend.image}` || "";
     image.style.backgroundSize  = "cover"
     this.container.appendChild(image);
 
