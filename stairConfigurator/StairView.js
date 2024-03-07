@@ -12,8 +12,10 @@ export class StairView {
     this.container.style.position = "relative";
 
     this.canvas = document.createElement("canvas");
-    this.ctx = this.canvas.getContext("2d");
-
+    this.ctx = this.canvas.getContext("2d", { alpha: true});
+const dpr = window.devicePixelRatio;
+this.ctx.scale(dpr, dpr);
+    this.ctx.imageSmoothingEnabled = true;
     this.container.appendChild(this.canvas);
 
     window.addEventListener("resize", () => this.update());

@@ -8,3 +8,10 @@
 .card_big {
   @apply w-1/2 h-full rounded-xl ;
 }
+
+canvas {
+    width: 100%; /* Adjust as needed */
+    height: auto; /* Adjust as needed */
+    image-rendering: -webkit-optimize-contrast; /* Improve contrast */
+    image-rendering: crisp-edges; /* Maintain crisp edges */
+}
