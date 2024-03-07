@@ -1,5 +1,4 @@
 export class StairView {
-
   constructor(props, viewType) {
     this.props = props;
     this.containerId = props[`${viewType}DivId`];
@@ -12,9 +11,7 @@ export class StairView {
     this.container.style.position = "relative";
 
     this.canvas = document.createElement("canvas");
-    this.ctx = this.canvas.getContext("2d", { alpha: true});
-const dpr = window.devicePixelRatio;
-this.ctx.scale(dpr, dpr);
+    this.ctx = this.canvas.getContext("2d", { alpha: true });
     this.ctx.imageSmoothingEnabled = true;
     this.container.appendChild(this.canvas);
 
@@ -22,10 +19,21 @@ this.ctx.scale(dpr, dpr);
     this.update();
   }
 
+  fix_dpi() {
+    let dpi = window.devicePixelRatio;
+    let style_height = +getComputedStyle(this.canvas).getPropertyValue("height").slice(0, -2); //get CSS width
+    let style_width = +getComputedStyle(this.canvas).getPropertyValue("width").slice(0, -2); //scale the canvas
+    this.canvas.setAttribute("height", style_height * dpi);
+    this.canvas.setAttribute("width", style_width * dpi);
+  }
+
   update() {
     this.canvas.width = this.container.clientWidth;
     this.canvas.height = this.container.clientHeight;
-    const { numSteps, stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } = this.props;
+    this.fix_dpi();
+
+    const { numSteps, stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } =
+      this.props;
 
     this.padding = 100;
     this.totalHeight = numSteps * (stepHeight + treadThickness);
@@ -54,43 +62,40 @@ this.ctx.scale(dpr, dpr);
 
   setupCanvas() {
     this.ctx.strokeStyle = "black";
-    this.ctx.fillStyle   = "white";
-    this.ctx.lineWidth   = 1;
+    this.ctx.fillStyle = "white";
+    this.ctx.lineWidth = 1;
   }
   drawStep() {
     // Override this method in child classes for specific drawing logic
   }
   createLegends(legends) {
-
     this.imgVisible = {};
     const legendContainer = document.createElement("div");
-    legendContainer.style.display         = "flex";
-    legendContainer.style.flexDirection   = "column";
-    legendContainer.style.alignItems      = "center";
-    legendContainer.style.justifyContent  = "center";
-    legendContainer.style.position        = "absolute";
-    legendContainer.style.top             = "10px";
-    legendContainer.style.left            = "10px";
-    legendContainer.style.padding         = "10px";
-    legendContainer.style.zIndex          = "10";
+    legendContainer.style.display = "flex";
+    legendContainer.style.flexDirection = "column";
+    legendContainer.style.alignItems = "center";
+    legendContainer.style.justifyContent = "center";
+    legendContainer.style.position = "absolute";
+    legendContainer.style.top = "10px";
+    legendContainer.style.left = "10px";
+    legendContainer.style.padding = "10px";
+    legendContainer.style.zIndex = "10";
     legendContainer.style.backgroundColor = "#ffffff90";
-    legendContainer.style.width           = "auto";
-    legendContainer.style.height          = "auto";
-    legendContainer.style.borderRadius    = "1rem";
-    legendContainer.style.fontSize        = "14px";
-
+    legendContainer.style.width = "auto";
+    legendContainer.style.height = "auto";
+    legendContainer.style.borderRadius = "1rem";
+    legendContainer.style.fontSize = "14px";
 
     legends.map((legendData, idx) => {
-
       this.imgVisible[legendData.name] = false;
 
       const legendLine = document.createElement("div");
-      legendLine.style.display        = "flex";
-      legendLine.style.alignItems     = "center";
-      legendLine.style.width          = "100%";
+      legendLine.style.display = "flex";
+      legendLine.style.alignItems = "center";
+      legendLine.style.width = "100%";
       legendLine.style.justifyContent = "space-between";
-      legendLine.style.gap            = "1rem";
-      
+      legendLine.style.gap = "1rem";
+
       const legendName = document.createElement("p");
       legendName.innerText = legendData.name;
 
@@ -109,37 +114,37 @@ this.ctx.scale(dpr, dpr);
     this.container.appendChild(legendContainer);
   }
 
-  helperImage(legend){
-    const image                 = document.createElement("img");
+  helperImage(legend) {
+    const image = document.createElement("img");
     image.style.backgroundColor = "white";
-    image.style.zIndex          = 999;
-    image.style.position        = "absolute";
-    image.style.top             = `${this.padding / 2}px`;
-    image.style.left            = `${this.padding / 2}px`;
-    image.style.width           = `${this.container.clientWidth - this.padding}px`;
-    image.style.height          = `${this.container.clientHeight - this.padding}px`;
-    image.style.visibility      = "hidden";
-    image.src                   = `/helper_images/${legend.image}` || "";
-    image.style.backgroundSize  = "cover"
+    image.style.zIndex = 999;
+    image.style.position = "absolute";
+    image.style.top = `${this.padding / 2}px`;
+    image.style.left = `${this.padding / 2}px`;
+    image.style.width = `${this.container.clientWidth - this.padding}px`;
+    image.style.height = `${this.container.clientHeight - this.padding}px`;
+    image.style.visibility = "hidden";
+    image.src = `/helper_images/${legend.image}` || "";
+    image.style.backgroundSize = "cover";
     this.container.appendChild(image);
 
-    const imgCloseButton                 = document.createElement("button");
-    imgCloseButton.innerText             = "X";
-    imgCloseButton.style.position        = "absolute";
-    imgCloseButton.style.display         = "flex";
-    imgCloseButton.style.alignItems      = "center";
-    imgCloseButton.style.justifyContent  = "center";
-    imgCloseButton.style.top             = "10px";
-    imgCloseButton.style.right           = "10px";
-    imgCloseButton.style.padding         = "10px";
-    imgCloseButton.style.zIndex          = "10";
+    const imgCloseButton = document.createElement("button");
+    imgCloseButton.innerText = "X";
+    imgCloseButton.style.position = "absolute";
+    imgCloseButton.style.display = "flex";
+    imgCloseButton.style.alignItems = "center";
+    imgCloseButton.style.justifyContent = "center";
+    imgCloseButton.style.top = "10px";
+    imgCloseButton.style.right = "10px";
+    imgCloseButton.style.padding = "10px";
+    imgCloseButton.style.zIndex = "10";
     imgCloseButton.style.backgroundColor = "black";
-    imgCloseButton.style.color           = "white";
-    imgCloseButton.style.width           = "2rem";
-    imgCloseButton.style.borderRadius    = "3rem";
-    imgCloseButton.onclick               = () => this.toggleRef(image, imgCloseButton, legend.name);
-    imgCloseButton.style.height          = "2rem";
-    imgCloseButton.style.visibility      = "hidden";
+    imgCloseButton.style.color = "white";
+    imgCloseButton.style.width = "2rem";
+    imgCloseButton.style.borderRadius = "3rem";
+    imgCloseButton.onclick = () => this.toggleRef(image, imgCloseButton, legend.name);
+    imgCloseButton.style.height = "2rem";
+    imgCloseButton.style.visibility = "hidden";
     this.container.appendChild(imgCloseButton);
 
     const helpIcon = document.createElement("div");
