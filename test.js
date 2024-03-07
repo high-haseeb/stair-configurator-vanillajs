@@ -46,13 +46,13 @@ gui.add(params, 'loadFile').name('upload texture');
 // prettier-ignore
 const update = () => configurator.update();
 const controllers = [
-  { propName: "stepHeight",     min: 1,   max: 10, step: 0.1, name: "riser height",    onChange: update },
-  { propName: "stepWidth",      min: 10,  max: 50, step: 1,   name: "step width",     onChange: update },
-  { propName: "stepDepth",      min: 1,   max: 10, step: 0.1, name: "step depth",     onChange: update },
-  { propName: "numSteps",       min: 1,   max: 20, step: 1,   name: "total steps",    onChange: update },
-  { propName: "riserThickness", min: 0.1, max: 0.8,  step: 0.1, name: "riser thicknes", onChange: update },
-  { propName: "treadThickness", min: 0.1, max: 1,  step: 0.1, name: "tread thicknes", onChange: update },
-  { propName: "nosing",         min: 0.3, max: 2,  step: 0.1, name: "nosing",         onChange: update },
+  { propName: "stepHeight",     min: 1,   max: 10,  step: 0.1, name: "riser height",     onChange: update },
+  { propName: "stepWidth",      min: 10,  max: 50,  step: 1,   name: "step width",       onChange: update },
+  { propName: "stepDepth",      min: 1,   max: 10,  step: 0.1, name: "individual going", onChange: update },
+  { propName: "numSteps",       min: 1,   max: 20,  step: 1,   name: "total steps",      onChange: update },
+  { propName: "riserThickness", min: 0.1, max: 0.8, step: 0.1, name: "riser thicknes",   onChange: update },
+  { propName: "treadThickness", min: 0.1, max: 1,   step: 0.1, name: "tread thicknes",   onChange: update },
+  { propName: "nosing",         min: 0.3, max: 2,   step: 0.1, name: "nosing",           onChange: update },
   { propName: "showDimensions", name: "show dimensions", onChange: update },
   { propName: "texture",     name: "texture",      onChange: () => configurator.three.updateMaterial() },
   { propName: "showOutline", name: "show outline", onChange: () => configurator.three.updateOutline()  },

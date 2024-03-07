@@ -37,12 +37,12 @@ export class SideView extends StairView {
       },
       {
         name: "total depth",
-        x: this.horizontalOffset,
-        y: this.verticalOffset,
-        length: this.totalDepth * this.scale,
+        x: this.horizontalOffset - (this.scaledNosing), 
+        y: this.verticalOffset, 
+        length: (this.totalDepth * this.scale) + this.scaledNosing + this.scaledRiserThickness,
         offset: 40,
         hor: true,
-        value: this.totalDepth,
+        value: this.totalDepth + this.props.nosing + this.props.riserThickness,
         image: "total_width.png"
       },
       { name: "nosing",           value: this.props.nosing.toFixed(2),         image: "nosing.png"},
