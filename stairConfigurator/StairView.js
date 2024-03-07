@@ -52,8 +52,8 @@ export class StairView {
 
   setupCanvas() {
     this.ctx.strokeStyle = "black";
-    this.ctx.fillStyle = "white";
-    this.ctx.lineWidth = 1;
+    this.ctx.fillStyle   = "white";
+    this.ctx.lineWidth   = 1;
   }
   drawStep() {
     // Override this method in child classes for specific drawing logic
@@ -170,8 +170,8 @@ export class StairView {
     this.ctx.strokeStyle = color;
     this.ctx.fillStyle = color;
     this.ctx.beginPath();
-    this.ctx.font = "10px sans";
-    this.ctx.lineWidth = 2;
+    this.ctx.font = "14px sans";
+    this.ctx.lineWidth = 1;
     this.ctx.textAlign = "left";
     if (hor) {
       y += offset;

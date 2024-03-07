@@ -27,12 +27,12 @@ export class TopView extends StairView {
         {
           x:      this.centerX + this.scaledStepWidth / 2,
           y:      stepY,
-          length: this.totalDepth * this.scale,
+          length: (this.totalDepth + this.props.nosing) * this.scale, 
           hor:    false,
           offset: 15,
-          text:   `${this.props.stepDepth * 100}mm`,
+          text:   `${this.props.numSteps * this.props.stepDepth * 100}mm`,
           name:   "depth",
-          value:  this.props.stepDepth,
+          value:  this.totalDepth + this.props.nosing,
           letter: "A",
         },
         {

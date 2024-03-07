@@ -40,7 +40,7 @@ export class SideView extends StairView {
         x: this.horizontalOffset,
         y: this.verticalOffset,
         length: this.totalDepth * this.scale,
-        offset: 20,
+        offset: 40,
         hor: true,
         value: this.totalDepth,
         image: "total_width.png"
