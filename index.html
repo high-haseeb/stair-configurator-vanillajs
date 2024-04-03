@@ -4,26 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stair Configurator</title>
-    <link href="./src/output.css" rel="stylesheet" />
+    <link href="./index.css" rel="stylesheet" />
   </head>
-  <body class="m-0 overflow-hidden">
-    <div class="main-container w-screen h-screen flex items-center justify-center gap-2 p-2 bg-black">
-      <div id="col-container" class="flex flex-col w-1/2 h-full gap-2">
-        <div id="sideveiw" class="card_small bg-gray-100"></div>
-        <div id="topveiw" class="card_small bg-gray-200"></div>
-      </div>
+  <body>
+    <input type="file" id="textureInput" accept="image/*" style="display: none" />
 
-      <div id="3dview" class="card_big bg-white"></div>
+    <div class="flex">
+      <div class="flex-col">
+        <div id="sideveiw" class="card"></div>
+        <div id="topveiw" class="card"></div>
+      </div>
+      <canvas id="3dview" class="three"></canvas>
     </div>
+
     <script type="importmap">
       {
         "imports": {
           "three/addons/": "https://unpkg.com/three@<version>/examples/jsm/"
         }
       }
-
     </script>
-    <input type="file" id="textureInput" accept="image/*" style="display: none">
     <script src="./test.js" type="module"></script>
   </body>
 </html>

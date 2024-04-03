@@ -30,7 +30,7 @@ export class StairView {
   update() {
     this.canvas.width = this.container.clientWidth;
     this.canvas.height = this.container.clientHeight;
-    this.fix_dpi();
+    // this.fix_dpi();
 
     const { numSteps, stepHeight, stepDepth, stepWidth, riserThickness, treadThickness, nosing } =
       this.props;

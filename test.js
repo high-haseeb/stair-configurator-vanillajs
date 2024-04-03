@@ -25,6 +25,7 @@ const props = {
 
 const configurator = new StairConfigurator(props);
 const gui = new dat.GUI({ name: "config" });
+gui.closed = true
 
 var params = {
     loadFile : () => {
@@ -42,9 +43,8 @@ var params = {
   },
 };
 gui.add(params, 'loadFile').name('upload texture');
-//
-// prettier-ignore
 const update = () => configurator.update();
+
 const controllers = [
   { propName: "stepHeight",     min: 1,   max: 10,  step: 0.1, name: "riser height",     onChange: update },
   { propName: "stepWidth",      min: 10,  max: 50,  step: 1,   name: "step width",       onChange: update },

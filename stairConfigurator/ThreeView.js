@@ -20,10 +20,9 @@ export class ThreeView {
 
     this.camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 1000);
 
-    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true , canvas: this.container});
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
-    this.container.appendChild(this.renderer.domElement);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
